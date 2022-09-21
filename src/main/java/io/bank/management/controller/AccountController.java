@@ -1,7 +1,8 @@
 package io.bank.management.controller;
 
 import io.bank.management.entity.Account;
-import io.bank.management.repository.AccountRepository;
+import io.bank.management.entity.Client;
+import io.bank.management.repository.ClientRepository;
 import io.bank.management.service.AccountService;
 import io.bank.management.service.ClientService;
 import org.springframework.web.bind.annotation.*;
@@ -12,13 +13,13 @@ import java.util.List;
 public class AccountController {
 
     private AccountService accountService;
-    private AccountRepository accountRepository;
     private ClientService clientService;
+    private ClientRepository clientRepository;
 
-    public AccountController(AccountService accountService, AccountRepository accountRepository, ClientService clientService) {
+    public AccountController(AccountService accountService, ClientService clientService, ClientRepository clientRepository) {
         this.accountService = accountService;
-        this.accountRepository = accountRepository;
         this.clientService = clientService;
+        this.clientRepository = clientRepository;
     }
 
     @PostMapping("/accounts")
@@ -30,6 +31,9 @@ public class AccountController {
                 return "Le compte client est introuvable";
             }else{
                 accountService.addNewAccount(account);
+                Client client=clientRepository.findById(account.getOwner()).orElse(null);
+                client.setAccounts(account);
+                clientRepository.save(client);
                 return "Compte bancaire crée avec succès";
             }
 
