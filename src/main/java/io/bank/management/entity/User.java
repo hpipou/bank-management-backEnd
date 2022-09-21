@@ -19,7 +19,7 @@ public class User {
     private String email;
     private String password;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles=new ArrayList<>();
 
 }
