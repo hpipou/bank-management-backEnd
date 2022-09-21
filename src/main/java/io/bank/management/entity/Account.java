@@ -22,6 +22,6 @@ public class Account {
     private Double balance;
     private Date dateTime;
     private String type;
-    private int owner;
+    private Long owner;
 
 }

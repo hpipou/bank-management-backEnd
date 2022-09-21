@@ -71,5 +71,5 @@ public class ClientController {
     public List<Client> showAllClients(){
         return clientService.showAllClients();
     }
-    
+
 }
