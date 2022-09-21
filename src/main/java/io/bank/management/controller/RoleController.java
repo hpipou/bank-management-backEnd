@@ -2,6 +2,7 @@ package io.bank.management.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.bank.management.entity.Role;
+import io.bank.management.entity.User;
 import io.bank.management.repository.RoleRepository;
 import io.bank.management.repository.UserRepository;
 import io.bank.management.service.RoleService;
@@ -9,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 public class RoleController {
@@ -83,9 +85,61 @@ public class RoleController {
             if(userRepository.findByEmail(email)==null){
                 return "Le compte associé à cette adresse email est introuvable";
             }else{
-                roleService.AddRoleToUser(roleName,email);
-                return "Le role a été ajouté avec succès à ce compte";
+
+                Map<String,Boolean> maListe=new HashMap<>();
+                User MyUser = userRepository.findByEmail(email);
+                MyUser.getRoles().forEach(role -> {
+                    if(role.getRoleName().equals(roleName)){
+                        maListe.put("roleName",true);
+                    }
+                });
+
+                if(maListe.get("roleName")==null){
+                    roleService.AddRoleToUser(roleName,email);
+                    return "Le role a été ajouté avec succès à ce compte";
+                }else{
+                    return "Role existe déjà pour ce compte";
+                }
+
             }
+
+        }
+
+    }
+
+
+    @PostMapping("/removeRoleToUser")
+    public String removeRoleToUser(HttpServletRequest request, HttpServletResponse response) throws Exception{
+
+        String roleName=request.getParameter("roleName");
+        String email=request.getParameter("email");
+
+        if(roleRepository.findByRoleName(roleName)==null){
+            return "Le role est introuvable";
+        }else{
+
+            if(userRepository.findByEmail(email)==null){
+                return "Le compte associé à cette adresse email est introuvable";
+            }else{
+
+                User MyUser = userRepository.findByEmail(email);
+
+                Collection<Role> newRole=new ArrayList<>();
+
+                MyUser.getRoles().forEach(role -> {
+                    if(role.getRoleName().equals(roleName)){
+
+                    }else {
+                        newRole.add(role);
+                    }
+                });
+
+                MyUser.setRoles(newRole);
+                userRepository.save(MyUser);
+                return "Role retiré avec succès";
+
+            }
+
         }
 
     }

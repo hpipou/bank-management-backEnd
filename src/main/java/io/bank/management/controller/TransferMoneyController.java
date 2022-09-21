@@ -47,7 +47,7 @@ public class TransferMoneyController {
         }catch (Exception e){
             return "L'ID SEND TO ne correspond pas à un chiffre";
         }
-        
+
         if(accountRepository.findByOwner(idSender)==null){
             return "Le compte bancaire de l'envoyeur est introuvable";
         }else{
@@ -63,9 +63,7 @@ public class TransferMoneyController {
                     transferMoneyService.transferMoney(idSender,money,idSendTo);
                     return "Somme transférée avec succès";
                 }
-
             }
         }
-
     }
 }

@@ -2,6 +2,7 @@ package io.bank.management.service;
 
 import io.bank.management.entity.User;
 import io.bank.management.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,21 +12,26 @@ import java.util.List;
 @Transactional
 public class UserServiceImpl implements UserService {
 
+    private PasswordEncoder passwordEncoder;
     private UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepository) {
+        this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
     }
 
     @Override
     public User addNewUser(User user) {
+        String password=user.getPassword();
+        user.setPassword(passwordEncoder.encode(password));
         return userRepository.save(user);
     }
 
     @Override
     public User editUser(User user) {
         User user1=userRepository.findByEmail(user.getEmail());
-        user1.setPassword(user.getPassword());
+        String password=user.getPassword();
+        user1.setPassword(passwordEncoder.encode(password));
         return userRepository.save(user1);
     }
 
