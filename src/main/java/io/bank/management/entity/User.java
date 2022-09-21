@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @Entity
 @Data
@@ -21,6 +20,6 @@ public class User {
     private String password;
 
     @OneToMany(fetch = FetchType.EAGER)
-    private Collection<Roles> roles=new ArrayList<>();
+    private Collection<Role> roles=new ArrayList<>();
 
 }

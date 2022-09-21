@@ -22,6 +22,6 @@ public class Client {
     private String email;
     private String cnp;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    private Collection<Account> accounts=new ArrayList<>();
+    @OneToOne(fetch = FetchType.EAGER)
+    private Account accounts;
 }
