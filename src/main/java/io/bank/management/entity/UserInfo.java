@@ -19,6 +19,6 @@ public class UserInfo {
     private String lastName;
     private String phone;
     private String adresse;
-    private int userID;
+    private Long userID;
 
 }
